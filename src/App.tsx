@@ -6,11 +6,11 @@ import Persons from "./components/persons/Persons";
 import Notification from "./components/notification/Notification";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] =  useState<any[]>([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filterName, setFilterName] = useState("");
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState('');
   const [color, setColor] = useState("green");
 
   const getPersons = () => {
@@ -51,10 +51,10 @@ const App = () => {
           name: newName,
           number: newPhone,
         })
-          .then((res) => {
+          .then(() => {
             setMessage(`${newName} added successfully`);
             setTimeout(() => {
-              setMessage(null);
+              setMessage('');
             }, 5000);
             setNewName("");
             setNewPhone("");
@@ -65,7 +65,7 @@ const App = () => {
             setMessage(`Cannot change the number plz refresh`);
             setColor("red");
             setTimeout(() => {
-              setMessage(null);
+              setMessage('');
               setColor("green");
             }, 5000);
           });
@@ -83,7 +83,7 @@ const App = () => {
           setPersons(persons.concat(returnData));
           setMessage(`${newName} added successfully`);
           setTimeout(() => {
-            setMessage(null);
+            setMessage('');
           }, 5000);
           setNewName("");
           setNewPhone("");
@@ -92,7 +92,7 @@ const App = () => {
           setMessage(`${err} occured`);
           setColor("red");
           setTimeout(() => {
-            setMessage(null);
+            setMessage('');
             setColor("green");
           }, 5000);
         });
@@ -114,7 +114,7 @@ const App = () => {
         .then((returnData) => {
           setMessage(`${returnData.name} deleted successfully`);
           setTimeout(() => {
-            setMessage(null);
+            setMessage('');
           }, 5000);
           setPersons(persons.filter((p) => p["id"] !== returnData.id));
         })
@@ -122,7 +122,7 @@ const App = () => {
           setMessage(`${err} occured`);
           setColor("red");
           setTimeout(() => {
-            setMessage(null);
+            setMessage('');
             setColor("green");
           }, 5000);
         });

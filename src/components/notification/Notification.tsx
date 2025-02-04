@@ -1,7 +1,5 @@
-import React from "react";
-
-const Notification = ({ message, color }: { message: any; color: string }) => {
-  if (message === null) {
+const Notification = ({ message, color }: { message: string; color: string }) => {
+  if (message === '') {
     return null;
   }
 
