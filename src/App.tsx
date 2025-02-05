@@ -134,7 +134,7 @@ const App = () => {
   }, []);
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>Phonebook 001</h2>
       <Notification color={color} message={message} />
       <Filter filterName={filterName} handleFilterName={handleFilterName} />
       <h3>Add a new</h3>
