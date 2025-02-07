@@ -70,7 +70,7 @@ const App = () => {
       if (sure) {
         PersonService.updateContact(existingEntry._id, personObject)
           .then((updatedPerson) => {
-            console.log('updated user data ',updatedPerson);
+            console.log("updated user data ", updatedPerson);
             getPersons();
             setMessage(`${newPhone} for user: ${newName} updated successfully`);
             setNewName("");
@@ -84,12 +84,19 @@ const App = () => {
               "error occured while updating the users new number",
               err
             );
+            console.error("update contact data err", err);
+            setMessage(`${err} occured`);
+            setColor("red");
+            setTimeout(() => {
+              setMessage("");
+              setColor("green");
+            }, 5000);
           });
       }
     } else {
       PersonService.create(personObject)
         .then((returnData) => {
-          console.log('post user data ',returnData);
+          console.log("post user data ", returnData);
           // setPersons(persons.concat(returnData));
           getPersons();
           setMessage(`${newName} added successfully`);
@@ -101,7 +108,7 @@ const App = () => {
         })
         .catch((err) => {
           console.error("post user data err", err);
-          setMessage(`${err} occured`);
+          setMessage(`${err.response.data.error} occured`);
           setColor("red");
           setTimeout(() => {
             setMessage("");
