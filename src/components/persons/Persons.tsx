@@ -4,7 +4,7 @@ import Person from "./person/Person";
 interface PersonItems {
   name: string;
   number: string;
-  id: string;
+  _id: string;
 }
 interface PersonProps {
   persons: PersonItems[];
@@ -15,7 +15,7 @@ const Persons: React.FC<PersonProps> = ({ persons,handleDelete }) => {
   return (
     <ul>
       {persons.map((person) => (
-        <Person handleDelete={handleDelete} id={person.id} key={person.id} name={person.name} number={person.number} />
+        <Person handleDelete={handleDelete} id={person._id} key={person._id} name={person.name} number={person.number} />
       ))}
     </ul>
   );

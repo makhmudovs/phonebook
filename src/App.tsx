@@ -6,11 +6,11 @@ import Persons from "./components/persons/Persons";
 import Notification from "./components/notification/Notification";
 
 const App = () => {
-  const [persons, setPersons] =  useState<any[]>([]);
+  const [persons, setPersons] = useState<any[]>([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filterName, setFilterName] = useState("");
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [color, setColor] = useState("green");
 
   const getPersons = () => {
@@ -35,64 +35,76 @@ const App = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const duplicateName = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
-    );
     if (newName === "" || !newName || newPhone === "" || !newPhone) {
       return;
     }
 
-    if (duplicateName) {
-      const sure = confirm(
-        `${newName} is already in the phonebook, replace the old number with the new one?`
+    // Check if the name already exists
+    const existingEntry = persons.find((entry) => entry.name === newName);
+    const existingPhone = persons.find((entry) => entry.number === newPhone);
+
+    if (existingPhone) {
+      setMessage(
+        `${newPhone} is already in the phonebook, please provide a new phone`
       );
+      setColor("red");
+      setTimeout(() => {
+        setMessage("");
+        setColor("green");
+      }, 5000);
+      return;
+    }
+
+    const personObject = {
+      name: newName,
+      number: newPhone,
+    };
+
+    if (existingEntry) {
+      console.log("we have a user with this name already ", existingEntry);
+
+      const sure = confirm(
+        "we have a user with this name already, do you want to update the number for this person"
+      );
+
       if (sure) {
-        PersonService.updateContact(duplicateName.id, {
-          name: newName,
-          number: newPhone,
-        })
-          .then(() => {
-            setMessage(`${newName} added successfully`);
-            setTimeout(() => {
-              setMessage('');
-            }, 5000);
+        PersonService.updateContact(existingEntry._id, personObject)
+          .then((updatedPerson) => {
+            console.log('updated user data ',updatedPerson);
+            getPersons();
+            setMessage(`${newPhone} for user: ${newName} updated successfully`);
             setNewName("");
             setNewPhone("");
-            getPersons();
+            setTimeout(() => {
+              setMessage("");
+            }, 5000);
           })
           .catch((err) => {
-            console.log(err);
-            setMessage(`Cannot change the number plz refresh`);
-            setColor("red");
-            setTimeout(() => {
-              setMessage('');
-              setColor("green");
-            }, 5000);
+            console.error(
+              "error occured while updating the users new number",
+              err
+            );
           });
-      } else {
-        return;
       }
     } else {
-      const personObject = {
-        name: newName,
-        number: newPhone,
-      };
-
       PersonService.create(personObject)
         .then((returnData) => {
-          setPersons(persons.concat(returnData));
+          console.log('post user data ',returnData);
+          // setPersons(persons.concat(returnData));
+          getPersons();
           setMessage(`${newName} added successfully`);
-          setTimeout(() => {
-            setMessage('');
-          }, 5000);
           setNewName("");
           setNewPhone("");
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
         })
         .catch((err) => {
+          console.error("post user data err", err);
           setMessage(`${err} occured`);
           setColor("red");
           setTimeout(() => {
-            setMessage('');
+            setMessage("");
             setColor("green");
           }, 5000);
         });
@@ -107,22 +119,23 @@ const App = () => {
     : persons;
 
   const handleDelete = (id: string) => {
+    console.log("deleting the contact with id: ", id);
     const sure = confirm(`Are you sure u want to delete person with ${id}`);
     if (sure) {
       //delete
       PersonService.deleteContact(id)
         .then((returnData) => {
-          setMessage(`${returnData.name} deleted successfully`);
+          setMessage("Deleted successfully");
+          getPersons();
           setTimeout(() => {
-            setMessage('');
+            setMessage("");
           }, 5000);
-          setPersons(persons.filter((p) => p["id"] !== returnData.id));
         })
         .catch((err) => {
           setMessage(`${err} occured`);
           setColor("red");
           setTimeout(() => {
-            setMessage('');
+            setMessage("");
             setColor("green");
           }, 5000);
         });
