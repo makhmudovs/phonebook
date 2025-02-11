@@ -131,7 +131,7 @@ const App = () => {
     if (sure) {
       //delete
       PersonService.deleteContact(id)
-        .then((returnData) => {
+        .then(() => {
           setMessage("Deleted successfully");
           getPersons();
           setTimeout(() => {
